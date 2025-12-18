@@ -1,0 +1,7 @@
+{
+  "name": "Idol Support Launcher",
+  "description": "A 5-step mobile web application for fans to launch idol support projects, including filtering, spot selection, content editing, and payment.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
