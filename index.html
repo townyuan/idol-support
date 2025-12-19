@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IDOL 應援發起助手</title>
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Babel 用於瀏覽器端解析 TSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
         body {
@@ -15,7 +18,7 @@
         }
         .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .glass-tag { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); }
+        .glass-tag { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
     </style>
     <script type="importmap">
 {
@@ -31,5 +34,7 @@
 </head>
 <body>
     <div id="root"></div>
+    <!-- 核心：連結入口檔案並告知 Babel 處理 -->
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
 </body>
 </html>
