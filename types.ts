@@ -27,7 +27,3 @@ export interface ProjectData {
   draftFile?: string;
   coverFile?: string;
 }
-
-export interface Wallet {
-  balance: number;
-}

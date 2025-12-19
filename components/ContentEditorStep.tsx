@@ -3,118 +3,74 @@ import React from 'react';
 import { ProjectData } from '../types';
 import { COLORS } from '../constants';
 
-interface ContentEditorStepProps {
-  projectData: ProjectData;
-  setProjectData: React.Dispatch<React.SetStateAction<ProjectData>>;
+interface Props {
+  data: ProjectData;
+  setData: React.Dispatch<React.SetStateAction<ProjectData>>;
   onNext: () => void;
-  onPrev: () => void;
 }
 
-export const ContentEditorStep: React.FC<ContentEditorStepProps> = ({ projectData, setProjectData, onNext }) => {
-  const isFormValid = projectData.title.trim().length > 0 && projectData.description.trim().length > 0;
-
-  const handleFileChange = (field: 'draftFile' | 'coverFile', e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Simulate file upload by setting name
-      setProjectData(prev => ({ ...prev, [field]: file.name }));
-    }
-  };
+export const ContentEditorStep: React.FC<Props> = ({ data, setData, onNext }) => {
+  const isValid = data.title && data.description;
 
   return (
     <div className="p-6 space-y-8 animate-fadeIn">
-      <section className="space-y-3">
-        <label className="block text-sm font-semibold text-gray-700">應援標題 (Project Title)</label>
+      <div className="space-y-4">
+        <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">應援標題</label>
         <input 
           type="text" 
-          maxLength={20}
-          placeholder="例如：慶祝 BTS V 出道十週年"
-          value={projectData.title}
-          onChange={(e) => setProjectData(prev => ({ ...prev, title: e.target.value }))}
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-200"
+          placeholder="例如：慶祝出道七週年應援"
+          value={data.title}
+          onChange={e => setData(prev => ({ ...prev, title: e.target.value }))}
+          className="w-full px-4 py-3 bg-gray-100 text-gray-900 placeholder-gray-400 rounded-2xl outline-none border-2 border-transparent focus:border-purple-200 focus:bg-white transition-all font-bold"
         />
-        <p className="text-right text-xs text-gray-400">{projectData.title.length}/20</p>
-      </section>
+      </div>
 
-      <section className="space-y-3">
-        <label className="block text-sm font-semibold text-gray-700">應援故事 (Description)</label>
+      <div className="space-y-4">
+        <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">應援故事</label>
         <textarea 
-          rows={5}
-          placeholder="介紹為什麼要發起這個應援專案..."
-          value={projectData.description}
-          onChange={(e) => setProjectData(prev => ({ ...prev, description: e.target.value }))}
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-200 resize-none"
-        ></textarea>
-      </section>
+          rows={4}
+          placeholder="寫下您發起這個專案的初衷..."
+          value={data.description}
+          onChange={e => setData(prev => ({ ...prev, description: e.target.value }))}
+          className="w-full px-4 py-3 bg-gray-100 text-gray-900 placeholder-gray-400 rounded-2xl outline-none border-2 border-transparent focus:border-purple-200 focus:bg-white transition-all font-medium resize-none"
+        />
+      </div>
 
-      <section className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-3">
-          <label className="block text-sm font-semibold text-gray-700 text-center">主視覺草稿 (Draft Upload)</label>
-          <div className="relative group">
-            <input 
-              type="file" 
-              accept="image/*"
-              onChange={(e) => handleFileChange('draftFile', e)}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-            />
-            <div className={`h-32 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center transition-colors ${projectData.draftFile ? 'border-purple-400 bg-purple-50' : 'border-gray-200 bg-gray-50'}`}>
-              {projectData.draftFile ? (
-                <div className="text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-500 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <p className="text-xs text-purple-600 font-medium truncate px-4 max-w-[200px]">{projectData.draftFile}</p>
-                </div>
-              ) : (
-                <>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                  </svg>
-                  <span className="text-xs text-gray-500">點擊上傳審核草稿</span>
-                </>
-              )}
-            </div>
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block text-center">主視覺草稿</label>
+          <div className={`h-28 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-colors ${data.draftFile ? 'border-purple-400 bg-purple-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'}`}>
+            <input type="file" className="hidden" id="draft-up" onChange={e => setData(prev => ({ ...prev, draftFile: e.target.files?.[0]?.name }))} />
+            <label htmlFor="draft-up" className="cursor-pointer text-center px-4 w-full">
+              <span className="text-2xl">📁</span>
+              <p className={`text-[10px] font-black mt-1 truncate max-w-full ${data.draftFile ? 'text-purple-700' : 'text-gray-500'}`}>
+                {data.draftFile || '選擇檔案'}
+              </p>
+            </label>
           </div>
         </div>
-
         <div className="space-y-3">
-          <label className="block text-sm font-semibold text-gray-700 text-center">封面圖片 (Cover Image)</label>
-          <div className="relative group">
-            <input 
-              type="file" 
-              accept="image/*"
-              onChange={(e) => handleFileChange('coverFile', e)}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-            />
-            <div className={`h-32 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center transition-colors ${projectData.coverFile ? 'border-purple-400 bg-purple-50' : 'border-gray-200 bg-gray-50'}`}>
-              {projectData.coverFile ? (
-                <div className="text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-500 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <p className="text-xs text-purple-600 font-medium truncate px-4 max-w-[200px]">{projectData.coverFile}</p>
-                </div>
-              ) : (
-                <>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                  </svg>
-                  <span className="text-xs text-gray-500">點擊上傳列表封面</span>
-                </>
-              )}
-            </div>
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block text-center">列表封面</label>
+          <div className={`h-28 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-colors ${data.coverFile ? 'border-purple-400 bg-purple-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'}`}>
+            <input type="file" className="hidden" id="cover-up" onChange={e => setData(prev => ({ ...prev, coverFile: e.target.files?.[0]?.name }))} />
+            <label htmlFor="cover-up" className="cursor-pointer text-center px-4 w-full">
+              <span className="text-2xl">🖼️</span>
+              <p className={`text-[10px] font-black mt-1 truncate max-w-full ${data.coverFile ? 'text-purple-700' : 'text-gray-500'}`}>
+                {data.coverFile || '選擇檔案'}
+              </p>
+            </label>
           </div>
         </div>
-      </section>
+      </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t max-w-md mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 p-5 bg-white/90 backdrop-blur-md border-t max-w-md mx-auto z-40">
         <button 
-          disabled={!isFormValid}
           onClick={onNext}
-          style={{ backgroundColor: isFormValid ? COLORS.primary : '#E5E7EB' }}
-          className={`w-full py-4 rounded-xl font-bold text-white transition-all shadow-lg active:scale-[0.98] ${!isFormValid ? 'cursor-not-allowed' : ''}`}
+          disabled={!isValid}
+          style={{ backgroundColor: isValid ? COLORS.primary : '#E5E7EB' }}
+          className={`w-full py-4 rounded-2xl font-black shadow-lg transition-all active:scale-95 ${isValid ? 'text-white' : 'text-gray-400'}`}
         >
-          下一步：確認金額
+          確認發起金額
         </button>
       </div>
     </div>

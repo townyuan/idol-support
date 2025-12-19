@@ -10,37 +10,29 @@ export const COLORS = {
 export const MOCK_SPOTS: Spot[] = [
   {
     id: 'spot-1',
-    name: '西門町 6 號出口 LED',
+    name: '西門町 6 號出口 LED 牆',
     location: '台北市萬華區',
-    image: 'https://picsum.photos/seed/ximen/400/250',
-    targetAmount: 100000,
-    leadInThreshold: 5000,
+    image: 'https://images.unsplash.com/photo-1570126618953-d437176e8c79?auto=format&fit=crop&q=80&w=400',
+    targetAmount: 120000,
+    leadInThreshold: 6000,
   },
   {
     id: 'spot-2',
-    name: '信義區 香堤大道大螢幕',
+    name: '信義 A11 電視大螢幕',
     location: '台北市信義區',
-    image: 'https://picsum.photos/seed/xinyi/400/250',
-    targetAmount: 150000,
-    leadInThreshold: 7500,
+    image: 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&q=80&w=400',
+    targetAmount: 200000,
+    leadInThreshold: 10000,
   },
   {
     id: 'spot-3',
-    name: '台北車站 地下街燈箱 A1',
-    location: '台北市中正區',
-    image: 'https://picsum.photos/seed/taipeimain/400/250',
-    targetAmount: 50000,
-    leadInThreshold: 2500,
-  },
-  {
-    id: 'spot-4',
-    name: '捷運中山站 月台電視牆',
+    name: '捷運中山站 燈箱廣告',
     location: '台北市中山區',
-    image: 'https://picsum.photos/seed/zhongshan/400/250',
-    targetAmount: 80000,
-    leadInThreshold: 4000,
-  },
+    image: 'https://images.unsplash.com/photo-1555529733-0e670560f7e1?auto=format&fit=crop&q=80&w=400',
+    targetAmount: 45000,
+    leadInThreshold: 2250,
+  }
 ];
 
 export const REGIONS = ['台北', '台中', '高雄', '首爾', '東京'];
-export const MEDIA_TYPES = ['燈箱', '公車廣告', 'LED 大螢幕', '咖啡廳應援'];
+export const MEDIA_TYPES = ['LED 大螢幕', '燈箱廣告', '公車廣告', '地鐵廣告'];

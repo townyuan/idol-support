@@ -3,107 +3,89 @@ import React, { useState } from 'react';
 import { ProjectData } from '../types';
 import { REGIONS, MEDIA_TYPES, COLORS } from '../constants';
 
-interface FilterStepProps {
-  projectData: ProjectData;
-  setProjectData: React.Dispatch<React.SetStateAction<ProjectData>>;
+interface Props {
+  data: ProjectData;
+  setData: React.Dispatch<React.SetStateAction<ProjectData>>;
   onNext: () => void;
 }
 
-export const FilterStep: React.FC<FilterStepProps> = ({ projectData, setProjectData, onNext }) => {
-  const [idolInput, setIdolInput] = useState('');
+export const FilterStep: React.FC<Props> = ({ data, setData, onNext }) => {
+  const [tempIdol, setTempIdol] = useState('');
 
   const addIdol = () => {
-    if (idolInput.trim() && !projectData.idols.includes(idolInput.trim())) {
-      setProjectData(prev => ({ ...prev, idols: [...prev.idols, idolInput.trim()] }));
-      setIdolInput('');
+    if (tempIdol.trim() && !data.idols.includes(tempIdol)) {
+      setData(prev => ({ ...prev, idols: [...prev.idols, tempIdol.trim()] }));
+      setTempIdol('');
     }
   };
 
-  const removeIdol = (idol: string) => {
-    setProjectData(prev => ({ ...prev, idols: prev.idols.filter(i => i !== idol) }));
-  };
-
-  const isFormValid = projectData.idols.length > 0 && projectData.region && projectData.mediaType && projectData.date;
+  const isValid = data.idols.length > 0 && data.region && data.mediaType && data.date;
 
   return (
     <div className="p-6 space-y-8 animate-fadeIn">
-      <section className="space-y-3">
-        <label className="block text-sm font-semibold text-gray-700">本命搜尋 (Idol Search)</label>
+      <div className="space-y-4">
+        <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">誰是主角？</label>
         <div className="flex gap-2">
           <input 
             type="text" 
-            placeholder="輸入本命偶像姓名..."
-            value={idolInput}
-            onChange={(e) => setIdolInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && addIdol()}
-            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
+            placeholder="輸入偶像姓名..."
+            value={tempIdol}
+            onChange={e => setTempIdol(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && addIdol()}
+            className="flex-1 px-4 py-3 bg-gray-100 text-gray-900 placeholder-gray-400 border-2 border-transparent focus:border-purple-300 focus:bg-white rounded-2xl outline-none transition-all"
           />
-          <button 
-            onClick={addIdol}
-            style={{ backgroundColor: COLORS.primary }}
-            className="px-6 py-3 text-white rounded-xl font-medium active:scale-95 transition-transform"
-          >
-            加入
-          </button>
+          <button onClick={addIdol} className="bg-gray-900 text-white px-5 rounded-2xl font-bold active:scale-90 transition-transform">增加</button>
         </div>
-        <div className="flex flex-wrap gap-2 pt-2">
-          {projectData.idols.map(idol => (
-            <span key={idol} className="flex items-center gap-1 px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium border border-purple-100">
-              {idol}
-              <button onClick={() => removeIdol(idol)} className="hover:text-purple-900">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+        <div className="flex flex-wrap gap-2">
+          {data.idols.map(i => (
+            <span key={i} className="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-xl text-sm font-bold flex items-center gap-2 border border-purple-100 shadow-sm">
+              {i}
+              <button onClick={() => setData(prev => ({ ...prev, idols: prev.idols.filter(x => x !== i) }))} className="hover:text-red-500">×</button>
             </span>
           ))}
-          {projectData.idols.length === 0 && <p className="text-gray-400 text-sm">請至少加入一位偶像</p>}
         </div>
-      </section>
+      </div>
 
-      <section className="space-y-3">
-        <label className="block text-sm font-semibold text-gray-700">應援地區 (Region)</label>
-        <select 
-          value={projectData.region}
-          onChange={(e) => setProjectData(prev => ({ ...prev, region: e.target.value }))}
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-200 bg-white"
-        >
-          <option value="">選擇地區</option>
-          {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
-        </select>
-      </section>
+      <div className="space-y-4">
+        <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">投放位置</label>
+        <div className="grid grid-cols-2 gap-3">
+          <select 
+            value={data.region}
+            onChange={e => setData(prev => ({ ...prev, region: e.target.value }))}
+            className="px-4 py-3 bg-gray-100 text-gray-900 rounded-2xl outline-none font-bold appearance-none border-2 border-transparent focus:border-purple-300 focus:bg-white transition-all"
+          >
+            <option value="" className="text-gray-400">選擇地區</option>
+            {REGIONS.map(r => <option key={r} value={r} className="text-gray-900">{r}</option>)}
+          </select>
+          <select 
+            value={data.mediaType}
+            onChange={e => setData(prev => ({ ...prev, mediaType: e.target.value }))}
+            className="px-4 py-3 bg-gray-100 text-gray-900 rounded-2xl outline-none font-bold appearance-none border-2 border-transparent focus:border-purple-300 focus:bg-white transition-all"
+          >
+            <option value="" className="text-gray-400">媒體類型</option>
+            {MEDIA_TYPES.map(m => <option key={m} value={m} className="text-gray-900">{m}</option>)}
+          </select>
+        </div>
+      </div>
 
-      <section className="space-y-3">
-        <label className="block text-sm font-semibold text-gray-700">媒體類型 (Media Type)</label>
-        <select 
-          value={projectData.mediaType}
-          onChange={(e) => setProjectData(prev => ({ ...prev, mediaType: e.target.value }))}
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-200 bg-white"
-        >
-          <option value="">選擇媒體類型</option>
-          {MEDIA_TYPES.map(m => <option key={m} value={m}>{m}</option>)}
-        </select>
-      </section>
-
-      <section className="space-y-3">
-        <label className="block text-sm font-semibold text-gray-700">預計檔期 (Date Picker)</label>
+      <div className="space-y-4">
+        <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">預定檔期</label>
         <input 
-          type="date" 
-          value={projectData.date}
-          min={new Date().toISOString().split('T')[0]}
-          onChange={(e) => setProjectData(prev => ({ ...prev, date: e.target.value }))}
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-200 bg-white"
+          type="date"
+          value={data.date}
+          onChange={e => setData(prev => ({ ...prev, date: e.target.value }))}
+          className="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-2xl outline-none font-bold border-2 border-transparent focus:border-purple-300 focus:bg-white transition-all"
         />
-      </section>
+      </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t max-w-md mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 p-5 bg-white/90 backdrop-blur-md border-t max-w-md mx-auto z-40">
         <button 
-          disabled={!isFormValid}
           onClick={onNext}
-          style={{ backgroundColor: isFormValid ? COLORS.primary : '#E5E7EB' }}
-          className={`w-full py-4 rounded-xl font-bold text-white transition-all shadow-lg active:scale-[0.98] ${!isFormValid ? 'cursor-not-allowed' : ''}`}
+          disabled={!isValid}
+          style={{ backgroundColor: isValid ? COLORS.primary : '#E5E7EB' }}
+          className={`w-full py-4 rounded-2xl font-black shadow-lg transition-all active:scale-95 ${isValid ? 'text-white' : 'text-gray-400'}`}
         >
-          下一步：查看版位
+          查看推薦版位
         </button>
       </div>
     </div>
